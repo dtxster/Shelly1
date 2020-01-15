@@ -66,9 +66,9 @@ typedef struct
 }system_state_t;
 
 /*
-*  Variables
+*  Formatters
 */
-
+#define STATUS_FMT "{cpu: %d, ssid: %Q, ip: %Q}"
 
 void deviceInit(void);
 void ButtonHandler(int pin, void *arg);
