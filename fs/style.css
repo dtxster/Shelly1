@@ -10,17 +10,17 @@ body {
   font: 16px/1.4 Helvetica, Arial, sans-serif;
 }
 
-div.content {
-  width: 800px;
+div.status {
+  width: 400px;
   margin: 1em auto;
-  padding: 2em;
-  background-color: #fff;
+  padding: 1em;
+  background-color: rgb(0, 30, 128);
   border-radius: 1em;
 }
 
 fieldset {
-  border: 1px solid #ccc;
-  padding: 1em;
+  border: 2px solid #ccc;
+  padding: 0.5em;
 }
 
 fieldset legend {
