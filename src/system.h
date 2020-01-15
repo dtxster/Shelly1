@@ -65,22 +65,12 @@ typedef struct
     struct schedule_t schedule;
 }system_state_t;
 
-/*
-*  Formatters
-*/
-#define STATUS_FMT "{cpu: %d, ssid: %Q, ip: %Q}"
 
 void deviceInit(void);
 void ButtonHandler(int pin, void *arg);
 void cmdRelay_cb(void *arg);
 void cmdRelay(int cmd);
-void user_init(void);
-void checkPumpSchedule(void);
 void setDefaultSchedule(void);
-
-// void becomeStation(struct sys_config_wifi_sta *device_cfg_sta);
-void report_state(void);
-void update_state(void);
 bool saveSchedule(void);
 bool getSchedule(void);
 

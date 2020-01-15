@@ -8,7 +8,6 @@
 #include "system.h"
 
 system_state_t system_state;
-struct mgos_config *device_cfg;
 
 /*
  * deviceInit: Configures peripherals used
