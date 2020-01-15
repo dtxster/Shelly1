@@ -6,6 +6,7 @@
  */
 
 #include "system.h"
+#include <string.h>
 
 system_state_t system_state;
 
@@ -28,6 +29,8 @@ void deviceInit(void)
 
 	// TODO - Get vlaue from config sss.timerval
 	system_state.delay.seconds = 5;
+	system_state.mode = Timer;
+
 	LOG(LL_INFO, ("Switch delay %i seconds\n", system_state.delay.seconds));
 
 	// Init Schedule
@@ -39,6 +42,8 @@ void deviceInit(void)
 	}
 	
 	// TODO - MQTT Init
+	mgos_mqtt_sub("shellysss/cmd", mqtt_cb, NULL);
+
 }
 
 /*
@@ -61,18 +66,26 @@ void ButtonHandler(int pin, void *arg){
 	}
 	cmdRelay(system_state.relay);
 	
-	// TODO - ne vzema timer ID i ne raboti timera / bez timerd trugva no samo 1 put ne go registrira pak
-	system_state.delay.id = mgos_set_timer((system_state.delay.seconds*1000), false, cmdRelay_cb, false);
-	
-	mgos_msleep(1000);
+	if(system_state.mode){
+		system_state.delay.id = mgos_set_timer((system_state.delay.seconds*1000), false, cmdRelay_cb, NULL);
+	}
 
-	if(RELAY_KEY_GPIO){
+	mgos_set_timer(1000, false, btnActive_cb, NULL);
+	(void)arg;
+	(void)pin;
+}
+
+/*
+ * Check switch level, if up- change mode and clear relay timer
+ *
+ */
+void btnActive_cb(void *arg){
+
+	if(mgos_gpio_read(RELAY_KEY_GPIO)){
 		system_state.mode = Manual;
 		mgos_clear_timer(system_state.delay.id);
 	}
-
 	(void)arg;
-	(void)pin;
 }
 
 
@@ -104,6 +117,30 @@ void cmdRelay_cb(void *arg){
 	
 	(void)arg;
 }
+
+
+/*
+* MQTT Callback
+*
+*/
+void mqtt_cb(struct mg_connection *nc, const char *topic,
+                              int topic_len, const char *msg, int msg_len,
+                              void *ud){
+
+	if(mg_strncmp(mg_mk_str(msg), mg_mk_str("lamp_on"), 7) == 0){
+		cmdRelay(ON);
+	}
+	else if(mg_strncmp(mg_mk_str(msg), mg_mk_str("lamp_off"), 8) == 0){
+		cmdRelay(OFF);
+	}
+
+	(void)nc;
+	(void)topic;
+	(void)topic_len;
+	(void)msg_len;
+	(void)ud;
+}
+
 
 /*
  * setDefaultSchedule: Initialize structure with default

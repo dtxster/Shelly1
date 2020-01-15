@@ -14,6 +14,7 @@
 #include "mgos.h"
 #include "mgos_gpio.h"
 #include "mgos_timers.h"
+#include "mgos_mqtt.h"
 
 
 /*
@@ -68,10 +69,13 @@ typedef struct
 
 void deviceInit(void);
 void ButtonHandler(int pin, void *arg);
+void btnActive_cb(void *arg);
 void cmdRelay_cb(void *arg);
 void cmdRelay(int cmd);
 void setDefaultSchedule(void);
 bool saveSchedule(void);
 bool getSchedule(void);
-
+void mqtt_cb(struct mg_connection *nc, const char *topic,
+                              int topic_len, const char *msg, int msg_len,
+                              void *ud);
 #endif /* SRC_SYSTEM_H_ */

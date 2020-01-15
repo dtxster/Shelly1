@@ -16,6 +16,7 @@ filesystem:
 
 config_schema:
 
+  - ["device.id", "shellysss"]
   # APP
   - ["sss", "o", {title: "Smart Stairs Switch settings"}]
   - ["sss.enabled", "b", false, {title: "State"}]
@@ -34,6 +35,10 @@ config_schema:
   - ["wifi.sta.ssid", "UBGRADE"]
   - ["wifi.sta.pass", "hackmepass"]
 
+  # mDNS
+  - ["dns_sd.enable", true]
+  - ["dns_sd.host_name", "shellysss"]
+
 libs:
   - origin: https://github.com/mongoose-os-libs/boards
   - origin: https://github.com/mongoose-os-libs/ca-bundle
@@ -44,7 +49,7 @@ libs:
   - origin: https://github.com/mongoose-os-libs/rpc-uart
   - origin: https://github.com/mongoose-os-libs/wifi
   - origin: https://github.com/mongoose-os-libs/sntp
-
+  
 tags:
   - wifi
   - c
