@@ -15,7 +15,7 @@
 #include "mgos_gpio.h"
 #include "mgos_timers.h"
 #include "mgos_mqtt.h"
-
+#include "mgos_cron.h"
 
 /*
 *  Definitions
@@ -27,45 +27,51 @@
 #define CALLBACK_PERIOD	1000
 
 /*
-*  Structures
+*  Enumeration/Structures
 */
+enum relay{
+	OFF,
+	ON
+};
+
+enum sysmode{
+    Timer,
+    Schedule,
+    Manual
+};
+
+struct mode_timer{
+    int seconds;
+    mgos_timer_id id;
+};
+
+struct mode_schedule{
+    int min_start;
+	int hour_start;
+	int min_end;
+	int hour_end;
+
+};
+
+enum schedule_mode{
+    Hour,
+	Sun
+};
+
 struct wifi_sta_settings {
   char ssid[SSID_SIZE];
   char pswd[PASSWORD_SIZE];
 };
 
-typedef enum{
-	OFF,
-	ON
-}relay_t;
-
-enum mode{
-    Timer,
-	Manual,
-    Schedule
-};
-
-typedef struct{
-    int seconds;
-    mgos_timer_id id;
-}mode_timer_t;
-
-struct schedule_t{
-	int min_start;
-	int hour_start;
-	int min_end;
-	int hour_end;
-};
-
 typedef struct 
 {
-    relay_t relay;
-	struct wifi_sta_settings wifi;
-    enum mode mode;
-    mode_timer_t delay;
-    struct schedule_t schedule;
+    enum relay relay;
+    enum sysmode mode;
+    struct mode_timer delay;
+    struct mode_schedule schedule;
+    enum schedule_mode schedule_mode;
+    struct wifi_sta_settings wifi;
 }system_state_t;
-
 
 void deviceInit(void);
 void ButtonHandler(int pin, void *arg);
@@ -78,4 +84,7 @@ bool getSchedule(void);
 void mqtt_cb(struct mg_connection *nc, const char *topic,
                               int topic_len, const char *msg, int msg_len,
                               void *ud);
+void cmdRelay_cron_cb(void *user_data, mgos_cron_id_t id);
+void scheduleMode(void);
+
 #endif /* SRC_SYSTEM_H_ */

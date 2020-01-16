@@ -19,7 +19,7 @@
  * 							variables.
  */
 static void periodicCallBackHandler(void *arg) {
-	return;
+	// LOG(LL_DEBUG, ("Date/time %s", Date()));
 	(void)arg;
 }
 
@@ -29,9 +29,10 @@ static void periodicCallBackHandler(void *arg) {
  */
 enum mgos_app_init_result mgos_app_init(void) {
 
+	// Set log level
 	cs_log_set_level(LL_DEBUG);
-    LOG(LL_DEBUG, ("Starting system\n"));
 
+    LOG(LL_DEBUG, ("Starting system\n"));
 	deviceInit();
 
 	LOG(LL_DEBUG, ("Setup syscheck call back : %d sec \n", CALLBACK_PERIOD/1000));

@@ -5,32 +5,37 @@
  * Author: Ivan Grigorov
  */
 
+/*
+*  Includes
+*/
 #include "system.h"
-#include <string.h>
-
+/*
+*  Variables
+*/
 system_state_t system_state;
+struct mgos_config sys_config;
 
 /*
  * deviceInit: Configures peripherals used
- *
  */
 void deviceInit(void)
 {
 	// Init GPIO
-	LOG(LL_DEBUG, ("Initialize GPIO ports \n"));
-
+	LOG(LL_INFO, ("Initialize GPIO ports \n"));
+	// Input
 	mgos_gpio_set_mode(RELAY_KEY_GPIO, MGOS_GPIO_MODE_INPUT);
 	mgos_gpio_set_pull(RELAY_KEY_GPIO, MGOS_GPIO_PULL_NONE);
-
+	mgos_gpio_set_button_handler(RELAY_KEY_GPIO, MGOS_GPIO_PULL_NONE, MGOS_GPIO_INT_EDGE_POS, 100, ButtonHandler, NULL);
+	// Output
 	mgos_gpio_set_mode(RELAY_DRV_GPIO, MGOS_GPIO_MODE_OUTPUT);
 	mgos_gpio_set_pull(RELAY_DRV_GPIO, MGOS_GPIO_PULL_NONE);
 	mgos_gpio_write(RELAY_DRV_GPIO, OFF);
-    mgos_gpio_set_button_handler(RELAY_KEY_GPIO, MGOS_GPIO_PULL_NONE, MGOS_GPIO_INT_EDGE_POS, 100, ButtonHandler, NULL);
 
-	// TODO - Get vlaue from config sss.timerval
-	system_state.delay.seconds = 5;
-	system_state.mode = Timer;
+	// TODO - Get config values from config sss.
+	system_state.mode = mgos_sys_config_get_sss_mode();
+	system_state.delay.seconds = mgos_sys_config_get_sss_timerval();
 
+	LOG(LL_INFO, ("System mode %s\n", system_state.mode ? "Schedule": "Timer"));
 	LOG(LL_INFO, ("Switch delay %i seconds\n", system_state.delay.seconds));
 
 	// Init Schedule
@@ -41,22 +46,80 @@ void deviceInit(void)
 		LOG(LL_INFO, ("Saved Schedule file schedule.txt\n"));
 	}
 	
-	// TODO - MQTT Init
+	// MQTT init
 	mgos_mqtt_sub("shellysss/cmd", mqtt_cb, NULL);
-
+	// Schedule init
+	scheduleMode();
 }
-
+/*
+* MQTT Callback
+*/
+void mqtt_cb(struct mg_connection *nc, const char *topic,
+                              int topic_len, const char *msg, int msg_len,
+                              void *ud){
+	if(mg_strncmp(mg_mk_str(msg), mg_mk_str("lamp_on"), 7) == 0){
+		cmdRelay(ON);
+		LOG(LL_DEBUG, ("MQTT lamp Of"));
+	}
+	else if(mg_strncmp(mg_mk_str(msg), mg_mk_str("lamp_off"), 8) == 0){
+		cmdRelay(OFF);
+		LOG(LL_DEBUG, ("MQTT lamp Off"));
+	}
+	else if(mg_strncmp(mg_mk_str(msg), mg_mk_str("mode_timer"), 10) == 0){
+		system_state.mode = Timer;
+		LOG(LL_DEBUG, ("MQTT mode timer"));
+	}
+	else if(mg_strncmp(mg_mk_str(msg), mg_mk_str("mode_manual"), 11) == 0){
+		system_state.mode = Manual;
+		LOG(LL_DEBUG, ("MQTT mode manual"));
+	}
+	else if(mg_strncmp(mg_mk_str(msg), mg_mk_str("mode_schedule"), 11) == 0){
+		system_state.mode = Schedule;
+		scheduleMode();
+		LOG(LL_DEBUG, ("MQTT schedule on"));
+	}
+	else if(mg_strncmp(mg_mk_str(msg), mg_mk_str("schedule_mode_hour"), 12) == 0){
+		system_state.schedule_mode = Hour;
+		scheduleMode();
+		LOG(LL_DEBUG, ("MQTT schedule mode hour"));
+	}
+	else if(mg_strncmp(mg_mk_str(msg), mg_mk_str("schedule_mode_sun"), 12) == 0){
+		system_state.schedule_mode = Sun;
+		scheduleMode();
+		LOG(LL_DEBUG, ("MQTT schedule mode sun"));
+	}
+	(void)nc;
+	(void)topic;
+	(void)topic_len;
+	(void)msg_len;
+	(void)ud;
+}
 /*
  * Button interrupt handler, button mode dependent commands
- *
  */
+void scheduleMode(void){
 
+	if(system_state.mode == Schedule){
+
+		if(system_state.schedule_mode){
+			mgos_cron_add("@sunrise * * *", cmdRelay_cron_cb, NULL);
+			mgos_cron_add("@sunset * * *", cmdRelay_cron_cb, NULL);
+		}
+		else if(!system_state.schedule_mode){
+			// TODO -Add values from file for time
+			mgos_cron_add("@sunrise * * *", cmdRelay_cron_cb, NULL);
+			mgos_cron_add("@sunset * * *", cmdRelay_cron_cb, NULL);
+		}
+	}
+}
+/*
+ * Button interrupt handler, button mode dependent commands
+ */
 void ButtonHandler(int pin, void *arg){
 
 	if(!system_state.relay){
 		system_state.relay = ON;
 	}
-
 	else{
 		system_state.relay = OFF;
 
@@ -118,28 +181,20 @@ void cmdRelay_cb(void *arg){
 	(void)arg;
 }
 
+void cmdRelay_cron_cb(void *user_data, mgos_cron_id_t id){
 
-/*
-* MQTT Callback
-*
-*/
-void mqtt_cb(struct mg_connection *nc, const char *topic,
-                              int topic_len, const char *msg, int msg_len,
-                              void *ud){
-
-	if(mg_strncmp(mg_mk_str(msg), mg_mk_str("lamp_on"), 7) == 0){
+	if(user_data){
 		cmdRelay(ON);
 	}
-	else if(mg_strncmp(mg_mk_str(msg), mg_mk_str("lamp_off"), 8) == 0){
+	else{
 		cmdRelay(OFF);
 	}
-
-	(void)nc;
-	(void)topic;
-	(void)topic_len;
-	(void)msg_len;
-	(void)ud;
+	
+	(void)id;
 }
+
+
+
 
 
 /*

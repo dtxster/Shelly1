@@ -16,16 +16,22 @@ filesystem:
 
 config_schema:
 
-  - ["device.id", "shellysss"]
+  #Device
+  - ["device.id", "shellysss_??????"]
+
   # APP
   - ["sss", "o", {title: "Smart Stairs Switch settings"}]
-  - ["sss.enabled", "b", false, {title: "State"}]
-  - ["sss.mode", "s", "Timer", {title: "Mode"}]
-  - ["sss.timerval", "i", 10, {title: "Timer seconds"}]
-  
+  - ["sss.enabled", "b", false, {title: "Switch state"}]
+  - ["sss.mode", "i", 0, {title: "Operation mode"}]
+  - ["sss.timerval", "i", 5, {title: "Auto off timer seconds"}]
+  - ["sss.sched_mode", "s", Sun, {title: "Auto off timer seconds"}]
+
   # SNTP
-  - ["sntp.server", "s", "0.bg.pool.ntp.org", {title: "Server address"}]
-  
+  - ["sntp.server", "0.bg.pool.ntp.org"]
+  - ["device.location.lat", 42.698334]
+  - ["device.location.lon", 23.319941]
+  - ["sys.tz_spec", "CET-1CEST,M3.5.0/2,M10.5.0/3"]
+
   # MQTT
   - ["mqtt.enable", true]
   - ["mqtt.server", "10.10.0.243:1883"]
@@ -34,10 +40,12 @@ config_schema:
   - ["wifi.sta.enable", true]
   - ["wifi.sta.ssid", "UBGRADE"]
   - ["wifi.sta.pass", "hackmepass"]
-
+  - ["wifi.ap.ssid", "shellysss_??????"]
+  - ["wifi.ap.pass", "shellysss_??????"]
+  
   # mDNS
   - ["dns_sd.enable", true]
-  - ["dns_sd.host_name", "shellysss"]
+  - ["dns_sd.host_name", "shellysss.local"]
 
 libs:
   - origin: https://github.com/mongoose-os-libs/boards
@@ -49,7 +57,8 @@ libs:
   - origin: https://github.com/mongoose-os-libs/rpc-uart
   - origin: https://github.com/mongoose-os-libs/wifi
   - origin: https://github.com/mongoose-os-libs/sntp
-  
+  - origin: https://github.com/mongoose-os-libs/crontab
+
 tags:
   - wifi
   - c
