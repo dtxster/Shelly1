@@ -31,7 +31,7 @@ void deviceInit(void)
 	mgos_gpio_set_pull(RELAY_DRV_GPIO, MGOS_GPIO_PULL_NONE);
 	mgos_gpio_write(RELAY_DRV_GPIO, OFF);
 
-	// TODO - Get config values from config sss.
+	// Get config
 	system_state.mode = mgos_sys_config_get_sss_mode();
 	system_state.delay.seconds = mgos_sys_config_get_sss_timerval();
 
