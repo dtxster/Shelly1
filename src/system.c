@@ -129,7 +129,7 @@ void ButtonHandler(int pin, void *arg){
 	}
 	cmdRelay(system_state.relay);
 	
-	if(system_state.mode){
+	if(!system_state.mode){
 		system_state.delay.id = mgos_set_timer((system_state.delay.seconds*1000), false, cmdRelay_cb, NULL);
 	}
 
