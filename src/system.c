@@ -17,7 +17,7 @@ struct mgos_config sys_config;
 
 /*
  * deviceInit: Configures peripherals used
- */
+ */ 
 void deviceInit(void)
 {
 	// Init GPIO
