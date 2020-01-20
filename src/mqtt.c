@@ -5,6 +5,7 @@
 * Author: Ivan Grigorov
 */
 #include "mqtt.h"
+mqtt_cmd cmd;
 /*
 * mqttInit: Inits MQTT
 */ 
@@ -20,45 +21,16 @@ void mqttInit(void)
 void mqtt_cb(struct mg_connection *nc, const char *topic,
                               int topic_len, const char *msg, int msg_len,
                               void *ud){
-    if (strcmp(topic, ""))                                  
-    int result = 0;
-    json_scanf(msg, strlen(msg), "{lamp: %B}", &result);
+    
+    json_scanf(msg, strlen(msg), MACHINE_STATE_FMT, &cmd.stat, &cmd.mode, &cmd.delay);
 
-	// if(mg_strncmp(mg_mk_str(msg), mg_mk_str("lamp_on"), 7) == 0){
-	// 	system_state.relay = OFF;
-	// 	ButtonHandler(1, NULL);
-	// 	LOG(LL_DEBUG, ("MQTT lamp On"));
-	// }
-	// else if(mg_strncmp(mg_mk_str(msg), mg_mk_str("lamp_off"), 8) == 0){
-	// 	system_state.relay = ON;
-	// 	ButtonHandler(1, NULL);
-	// 	LOG(LL_DEBUG, ("MQTT lamp Off"));
-	// }
-	// else if(mg_strncmp(mg_mk_str(msg), mg_mk_str("mode_timer"), 10) == 0){
-	// 	system_state.mode = Timer;
-	// 	mgos_sys_config_set_sss_mode(system_state.mode);
-	// 	LOG(LL_DEBUG, ("MQTT mode timer"));
-	// }
-	// else if(mg_strncmp(mg_mk_str(msg), mg_mk_str("mode_manual"), 11) == 0){
-	// 	system_state.mode = Manual;
-	// 	mgos_sys_config_set_sss_mode(system_state.mode);
-	// 	LOG(LL_DEBUG, ("MQTT mode manual"));
-	// }
-	// else if(mg_strncmp(mg_mk_str(msg), mg_mk_str("mode_schedule"), 11) == 0){
-	// 	system_state.schedule.enabled = true;
-	// 	mgos_sys_config_set_sss_mode(system_state.mode);
-	// 	LOG(LL_DEBUG, ("MQTT schedule on"));
-	// }
-	// else if(mg_strncmp(mg_mk_str(msg), mg_mk_str("schedule_mode_hour"), 12) == 0){
-	// 	system_state.schedule_mode = Hour;
-	// 	scheduleSet();
-	// 	LOG(LL_DEBUG, ("MQTT schedule mode hour"));
-	// }
-	// else if(mg_strncmp(mg_mk_str(msg), mg_mk_str("schedule_mode_sun"), 12) == 0){
-	// 	system_state.schedule_mode = Sun;
-	// 	scheduleSet();
-	// 	LOG(LL_DEBUG, ("MQTT schedule mode sun"));
-	// }
+	system_state.relay = !cmd.stat;
+ 	system_state.mode = cmd.mode;
+	// mgos_sys_config_set_sss_mode(system_state.mode);
+	system_state.delay.seconds = cmd.delay;
+	// mgos_sys_config_set_sss_timerval(system_state.delay.seconds);
+	ButtonHandler(1, NULL);
+
 	(void)nc;
 	(void)topic;
 	(void)topic_len;

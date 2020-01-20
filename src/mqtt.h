@@ -12,11 +12,20 @@
 #include "system.h"
 #include "mgos_mqtt.h"
 #include "frozen.h"
+/*
+*  Enumeration/Structures
+*/
+typedef struct{
+    bool stat;
+    int mode;
+    int delay;
+}mqtt_cmd;
 
 /*
 *  JSON Formatters
 */
 #define MACHINE_STATE_FMT "{relay: %B, mode: %d, delay: %d}"
+
 /*
 *  Function prototypes
 */

@@ -8,25 +8,22 @@
 
 ## Guideline
 
-    1. In <b>Timer</b> mode, on hardware switch press or MQTT "lamp_on" command works for a defined period of time.
-    2. In <b>Manual</b> mode, on hardware switch press or MQTT "lamp_on" command works untill switch is pressed again or MQTT "lamp_off" is sent.
-    3. If <b>Schedule</b> mode is active, there are two types of operations: Sunrise/Sunset based schedule, or predefined start/stop time.
+    1. In Timer mode, on hardware switch press or MQTT {relay:on} command works for a defined period of time.
+    2. In Manual mode, on hardware switch press or MQTT {relay:on} command works untill switch is pressed again or MQTT {relay:off} is sent.
+    3. If Schedule mode is active, there are two types of operations: Sunrise/Sunset based schedule, or predefined start/stop time.
  
 ## MQTT Commands
 
+    MQTT accepts JSON formatting as shown:
     // Basic
-    "lamp_on" - On
-    "lamp_off" - Off
-    // Mode switching
-    "mode_timer" - Sets mode to timer (5 secs(hardcoded))
-    "mode_manual" - Sets mode to manual, on "lamp_on" works till "lamp_off" is sent
-    // Schedule settings
-    "schedule_on" - (only debug msgs in TODO list)
-    "schedule_off"  - (only debug msgs in TODO list)
-    "schedule_mode_hour"  - (only debug msgs in TODO list)
-    "schedule_mode_sun"  - (only debug msgs in TODO list)
+    {relay:true,delay:5,mode:0}
+    where:
+        relay:true/false - On-Off
+        delay:seconds for Timer mode
+        mode:0-Timer,1-Manual
+
     // TODO
-    "timer_delay (secs)"
+        Schedule settings
 
 ## TODO
     
