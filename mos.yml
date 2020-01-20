@@ -34,7 +34,7 @@ config_schema:
 
   # MQTT
   - ["mqtt.enable", true]
-  - ["mqtt.server", "10.10.0.243:1883"]
+  #- ["mqtt.server", "10.10.0.243:1883"]
 
   # WiFi
   - ["wifi.sta.enable", true]

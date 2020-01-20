@@ -1,8 +1,8 @@
 /*
- * main.c for Smart Stairs Switch
- * Created on 10.01.2020
- * Author: Ivan Grigorov
- */
+* main.c for Smart Stairs Switch
+* Created on 10.01.2020
+* Author: Ivan Grigorov
+*/
 
 /*
 *  Includes
@@ -15,18 +15,17 @@
 */
 
 /*
- * periodicCallBackHandler: Function called periodically which updates system
- * 							variables.
- */
+* periodicCallBackHandler: Function called periodically which updates system
+* 							variables.
+*/
 static void periodicCallBackHandler(void *arg) {
 	// LOG(LL_DEBUG, ("Date/time %s", Date()));
 	(void)arg;
 }
 
 /*
- * mgos_app_init: Initializes application
- *
- */
+* mgos_app_init: Initializes application
+*/
 enum mgos_app_init_result mgos_app_init(void) {
 
 	// Set log level
