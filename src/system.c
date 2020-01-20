@@ -99,6 +99,18 @@ void mqtt_cb(struct mg_connection *nc, const char *topic,
 	(void)ud;
 }
 /*
+ * Send JSON string to device/stat topic
+ */
+void updateState(char *stat){
+	if(strcmp(stat, "state") == 0){
+		mgos_mqtt_pubf("shellysss/stat", 0, true, MACHINE_STATE_FMT, system_state.relay, system_state.mode, system_state.delay);	
+	}
+	else if (strcmp(stat, "device") == 0)
+	{
+		mgos_mqtt_pubf("shellysss/stat", 0, true, MACHINE_STATE_FMT, system_state.relay);
+	}
+}
+/*
  * Button interrupt handler, button mode dependent commands
  */
 void scheduleMode(void){
@@ -138,6 +150,7 @@ void ButtonHandler(int pin, void *arg){
 	}
 
 	mgos_set_timer(1000, false, btnActive_cb, NULL);
+	updateState("state");
 	(void)arg;
 	(void)pin;
 }

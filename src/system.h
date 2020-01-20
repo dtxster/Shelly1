@@ -4,10 +4,8 @@
  * Created on 10.01.2020
  * Author: Ivan Grigorov
  */
-
 #ifndef SRC_SYSTEM_H_
 #define SRC_SYSTEM_H_
-
 /*
 *  Includes
 */
@@ -16,7 +14,6 @@
 #include "mgos_timers.h"
 #include "mgos_mqtt.h"
 #include "mgos_cron.h"
-
 /*
 *  Definitions
 */
@@ -25,7 +22,10 @@
 #define RELAY_DRV_GPIO	4
 #define RELAY_KEY_GPIO	5
 #define CALLBACK_PERIOD	1000
-
+/*
+*  JSON Formatters
+*/
+#define MACHINE_STATE_FMT "{relay: %B, mode: %d, delay: %d}"
 /*
 *  Enumeration/Structures
 */
@@ -72,12 +72,15 @@ typedef struct
     enum schedule_mode schedule_mode;
     struct wifi_sta_settings wifi;
 }system_state_t;
-
+/*
+*  Function prototypes
+*/
 void deviceInit(void);
 void ButtonHandler(int pin, void *arg);
 void btnActive_cb(void *arg);
 void cmdRelay_cb(void *arg);
 void cmdRelay(int cmd);
+void updateState(char *stat);
 void setDefaultSchedule(void);
 bool saveSchedule(void);
 bool getSchedule(void);
