@@ -20,7 +20,7 @@ void deviceInit(void)
 	system_state.mode = mgos_sys_config_get_sss_mode();
 	system_state.delay.seconds = mgos_sys_config_get_sss_timerval();
 
-	LOG(LL_INFO, ("System mode %s\n", system_state.mode ? "Schedule": "Timer"));
+	LOG(LL_INFO, ("System mode %s\n", system_state.mode ? "Manual": "Timer"));
 	LOG(LL_INFO, ("Switch delay %i seconds\n", system_state.delay.seconds));
 
 	// MQTT init

@@ -51,7 +51,7 @@ struct mode_schedule{
 	int hour_start;
 	int min_end;
 	int hour_end;
-
+    bool enabled;
 };
 
 enum schedule_mode{

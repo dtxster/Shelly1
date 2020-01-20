@@ -11,6 +11,8 @@
 */
 #include "system.h"
 #include "mgos_mqtt.h"
+#include "frozen.h"
+
 /*
 *  JSON Formatters
 */
