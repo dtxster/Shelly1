@@ -10,7 +10,7 @@
 
     1. In Timer mode, on hardware switch press or MQTT {relay:on} command works for a defined period of time.  
     2. In Manual mode, on hardware switch press and hold for 1 second, or MQTT {relay:on,mode:1} command  
-    works untill switch is pressed again or MQTT {relay:off} is sent.  
+    works until switch is pressed again or MQTT {relay:off} is sent.  
     After the off command system goes back to Timer mode.  
     3. If Schedule mode is active, there are two types of operations: Sunrise/Sunset based schedule,  
     or predefined start/stop time.

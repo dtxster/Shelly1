@@ -12,16 +12,67 @@
     <h1>Smart Stairs Switch</h1>
 
     <p>
-      Config and settings page
+      Status and settings
     </p>
 
     <fieldset>
         <legend>Status</legend>
-
+        <label><br>State: </label>
+        <label><br>Mode: </label>
         <label><br>DeviceID: </label>
         <label><br>Uptime: </label>
         <label><br>SSID: </label>
         <label><br>IP: </label>
+    </fieldset>
+    <fieldset>
+      <legend>Settings</legend>
+       <fieldset>
+        <legend>State</legend>
+        <div>
+        <button name="btn_on">On/Off</button>
+        </div>
+        <div>
+        <label><br>Mode: </label><br>
+        <input type="radio" id="0" name="mode">
+        <label for="0">Timer</label><br/>
+        <input type="radio" id="1" name="mode">
+        <label for="1">Manual</label><br/>
+        <label for="delay"><br>Delay: </label>
+        <input type="text" id="delay" value="5">
+        <div id=btn>
+        <button name="btn_mode">Set</button>
+        <div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Wifi</legend>
+        <div>
+          <label for="ssid">SSID: </label>
+          <input type="text" id="ssid" value="Wifi Name">
+        </div>
+        <div>
+          <label for="pass">PASS:</label>
+          <input type="password" id="pass" value="none">
+        </div>
+        <div id=btn>
+        <button name="btn_wifi">Save</button>
+        </div>
+      </fieldset>
+      <fieldset>
+      <legend>MQTT</legend>
+      <div>
+      <label for="mqtt_srv">Server: </label>
+      <input type="text" id="mqtt_srv" value="Wifi Name">
+      </div>
+      <div>
+      <label for="mqtt_topic">Topic:</label>
+      <input type="text" id="mqtt_topic" value="none">
+      </div>
+      <div id=btn>
+      <button name="btn_mqtt">Save</button>
+      </div>
+      </fieldset>
+      
     </fieldset>
   </div> 
 </body>

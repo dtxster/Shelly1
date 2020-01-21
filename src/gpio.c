@@ -78,5 +78,6 @@ void cmdRelay_cb(void *arg){
 	else{
 		cmdRelay(OFF);
 	}
+	updateState("state");
 	(void)arg;
 }

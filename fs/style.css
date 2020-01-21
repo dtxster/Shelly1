@@ -18,6 +18,11 @@ div.status {
   border-radius: 1em;
 }
 
+div.btn {
+  margin: auto;
+  padding: auto;
+}
+
 fieldset {
   border: 2px solid #ccc;
   padding: 0.5em;
